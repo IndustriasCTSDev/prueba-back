@@ -9,7 +9,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const configService = app.get(config_1.ConfigService);
     app.enableCors({
-        origin: '*',
+        origin: ['http://localhost:3000', 'https://cloud-front-ten.vercel.app/'],
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
         transform: true,

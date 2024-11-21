@@ -172,6 +172,78 @@ class MigratedData1730393358648 {
                         att.updated_at
                     ])]);
             });
+            const faltantesUsuariosQuery = `
+                SELECT o.id, o.name, d.name
+                FROM users o
+                LEFT JOIN users_v1 d ON o.id = d.id
+                WHERE d.id IS NULL OR o.name <> d.name;
+            `;
+            const validUsersResult = await queryRunner.query(faltantesUsuariosQuery);
+            console.log("USUARIOS FALTANTES", validUsersResult.length);
+            const faltantesProyectosQuery = `
+                SELECT 
+                    o.id AS origen_id, 
+                    o.name AS origen_name, 
+                    d.id AS destino_id, 
+                    d.name AS destino_name
+                FROM 
+                    projects o
+                LEFT JOIN 
+                    project_v1 d ON o.id = d.id
+                WHERE 
+                    d.id IS NULL 
+                    OR o.name <> d.name;
+            `;
+            const faltantesProjectsResult = await queryRunner.query(faltantesProyectosQuery);
+            console.log("PROYECTOS FALTANTES", faltantesProjectsResult.length);
+            const faltantesFoldersQuery = `
+                SELECT 
+                    o.id AS origen_id, 
+                    o.name AS origen_name, 
+                    d.id AS destino_id, 
+                    d.name AS destino_name
+                FROM 
+                    folders o
+                LEFT JOIN 
+                    folder_v1 d ON o.id = d.id
+                WHERE 
+                    d.id IS NULL 
+                    OR o.name <> d.name;
+            `;
+            const faltantesFoldersResult = await queryRunner.query(faltantesFoldersQuery);
+            console.log("FOLDERS FALTANTES", faltantesFoldersResult.length);
+            const faltantesAttachmentsQuery = `
+                SELECT 
+                    o.id AS origen_id, 
+                    o.filename AS origen_name, 
+                    d.id AS destino_id, 
+                    d.file_name AS destino_name
+                FROM 
+                    attachments o
+                LEFT JOIN 
+                    attachment_v1 d ON o.id = d.id
+                WHERE 
+                    d.id IS NULL 
+                    OR o.filename <> d.file_name;
+            `;
+            const faltantesAttachmentsResult = await queryRunner.query(faltantesAttachmentsQuery);
+            console.log("ARCHIVOS FALTANTES", faltantesAttachmentsResult.length);
+            const faltantesTemplatesQuery = `
+                SELECT 
+                    o.id AS origen_id, 
+                    o.name AS origen_name, 
+                    d.id AS destino_id, 
+                    d.name AS destino_name
+                FROM 
+                    templates o
+                LEFT JOIN 
+                    template_v1 d ON o.id = d.id
+                WHERE 
+                    d.id IS NULL 
+                    OR o.name <> d.name;
+            `;
+            const faltantesTemplatesResult = await queryRunner.query(faltantesTemplatesQuery);
+            console.log("PLANTILLAS FALTANTES", faltantesTemplatesResult.length);
         }
         catch (error) {
             console.error("Migration error:", error);
